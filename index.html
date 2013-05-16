@@ -1,0 +1,65 @@
+<html>
+<head>
+<style>
+.alt h2 { color: red; }
+</style>
+</head>
+<body>
+  <div id="container">
+    <h2>Hello, world</h2>
+    <p>Foo bar biz baz</h2>
+  </div>
+  <button id="doStuff">Add Color</div>
+<script src="http://localhost:8088/socket.io/socket.io.js"></script>
+<script src="js/html2canvas.min.js"></script>
+<script>
+window['onload'] = function() {
+  var socket = io.connect('http://localhost:8088');
+
+  setInterval(function() {
+    html2canvas([ document.body ], {
+      onrendered : function(canvas) {
+        //console.log(canvas.toDataURL());
+        //document.body.appendChild(canvas);
+        socket.emit('imgUpdate', { data : canvas.toDataURL() });
+      }
+    });
+  }, 3000);
+
+  function throttle(fn, delay) {
+    var last, deferTimer;
+
+    return function() {
+      var ctx = this;
+      var now = +new Date(), args = arguments;
+
+      if(last && now < last + delay) {
+        clearTimeout(deferTimer);
+        deferTimer = setTimeout(function() {
+          last = now;
+          fn.apply(ctx, args);
+        }, delay);
+      }
+      else {
+        last = now;
+        fn.apply(ctx, args);
+      }
+    };
+  }
+
+  document.body.addEventListener('mousemove', throttle(function(e) {
+    var xp = e.pageX / document.body.clientWidth;
+    var yp = e.pageY / document.body.clientHeight;
+    socket.emit('mouseMove', {
+      xp : xp,
+      yp : yp
+    });
+  }, 300));
+  
+  document.getElementById('doStuff').addEventListener('click', function() {
+    document.getElementById('container').className = 'alt';
+  });
+};
+</script>
+</body>
+</html>

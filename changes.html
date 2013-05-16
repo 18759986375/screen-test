@@ -1,0 +1,52 @@
+<html>
+<head>
+<style>
+body { padding: 0; margin: 0; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script src="http://localhost:8088/socket.io/socket.io.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+<script>
+$(function() {
+  var socket = io.connect('http://localhost:8088');
+  var canvas = $('#c')
+    , ctx = canvas.get(0).getContext('2d');
+
+  socket.on('imgUpdate', function(canvasData) {
+    var img = new Image();
+
+    img.onload = function() {
+      ctx.drawImage(img, 0, 0);
+    };
+
+    img.src = canvasData.data;
+
+  });
+
+  socket.on('mouseMove', function(mousePos) {
+    var m = $('#mouse');
+
+    if(m.length === 0) {
+      m = $('<div />')
+            .attr('id', 'mouse')
+            .html('<img src="img/mouse.png" />')
+            .css('position', 'absolute');
+
+      $('body').append(m);
+    }
+
+    var myWidth = $('body').width();
+    var myHeight = $('body').height();
+    var l = Math.floor(myWidth * mousePos.xp)
+      , t = Math.floor(myHeight * mousePos.yp);
+
+    m.css({ 'top' : t, 'left' : l });
+
+  });
+
+});
+</script>
+</body>
+</html>
