@@ -1,0 +1,158 @@
+<html>
+<head>
+<style type="text/css">
+.message {
+  width: 200px;
+  position: relative;
+  padding: 15px;
+  margin: 1em 0 3em;
+  border: 5px solid #5a8f00;
+  color: #333;
+  background: #fff;
+  /* css3 */
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+
+  background: #d4e4ef; /* Old browsers */
+  background: -moz-linear-gradient(top,  #d4e4ef 0%, #86aecc 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#d4e4ef), color-stop(100%,#86aecc)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top,  #d4e4ef 0%,#86aecc 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top,  #d4e4ef 0%,#86aecc 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top,  #d4e4ef 0%,#86aecc 100%); /* IE10+ */
+  background: linear-gradient(to bottom,  #d4e4ef 0%,#86aecc 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d4e4ef', endColorstr='#86aecc',GradientType=0 ); /* IE6-9 */
+}
+.message.left {
+  margin-left: 30px;
+}
+.message:before {
+  content: "";
+  position: absolute;
+  bottom: -20px; /* value = - border-top-width - border-bottom-width */
+  left: 40px; /* controls horizontal position */
+  border-width: 20px 20px 0;
+  border-style: solid;
+  border-color: #5a8f00 transparent;
+  /* reduce the damage in FF3.0 */
+  display: block; 
+  width: 0;
+}
+.message:after {
+  content: "";
+  position: absolute;
+  bottom: -13px; /* value = - border-top-width - border-bottom-width */
+  left: 47px; /* value = (:before left) + (:before border-left) - (:after border-left) */
+  border-width: 13px 13px 0;
+  border-style: solid;
+  border-color: #fff transparent;
+  /* reduce the damage in FF3.0 */
+  display: block; 
+  width: 0;
+}
+.message.left:before {
+  top: 10px; /* controls vertical position */
+  bottom: auto;
+  left: -30px; /* value = - border-left-width - border-right-width */
+  border-width: 15px 30px 15px 0;
+  border-color: transparent #5a8f00;
+}
+.message.left:after {
+  top: 16px; /* value = (:before top) + (:before border-top) - (:after border-top) */
+  bottom: auto;
+  left: -21px; /* value = - border-left-width - border-right-width */
+  border-width: 9px 21px 9px 0;
+  border-color: transparent #fff;
+}
+
+
+
+.message2 {
+  width: 200px;
+  position: relative;
+  padding: 15px;
+  margin: 1em 0 3em;
+  border: 0px solid #888;
+  color: #333;
+  background: #2980b9;
+  /* css3 */
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  border-radius: 8px;
+  color: #fff;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  margin-bottom: 20px;
+  margin-top: 0;
+}
+.message2.left {
+  margin-left: 20px;
+}
+
+.message2:after {
+  content: "";
+  position: absolute;
+  bottom: -13px;          /* value = - border-top-width - border-bottom-width */
+  left: 47px;             /* value = (:before left) + (:before border-left) - (:after border-left) */
+  border-width: 13px 13px 0;
+  border-style: solid;
+  border-color: #fff transparent;
+  /* reduce the damage in FF3.0 */
+  display: block; 
+  width: 0;
+}
+
+.message2.left:after {
+  top: 13px; /* value = (:before top) + (:before border-top) - (:after border-top) */
+  bottom: auto;
+  left: -14px; /* value = - border-left-width - border-right-width */
+  border-width: 10px 14px 10px 0;
+  border-color: transparent #2980b9;
+}
+
+.message2.right {
+  margin-right: 20px;
+  /*position: absolute;
+  top: auto;
+  right: 10px;*/
+  float: right;
+}
+.message2.right:after {
+  top: 13px;    /* value = (:before top) + (:before border-top) - (:after border-top) */
+  bottom: auto;
+  left: auto;
+  right: -14px; /* value = - border-left-width - border-right-width */
+  border-width: 10px 0 10px 14px;
+  border-color: transparent #2980b9;
+}
+.message2:last-child {
+  margin-bottom: 0;
+}
+
+#container {
+  border: 1px solid #aaa;
+  width: 400px;
+  overflow: hidden;
+  padding: 20px 0;
+}
+
+
+/* #9eaeb1 */
+</style>
+</head>
+<body>
+
+<div id="container">
+  <!--<div class="message left">This is a chat message</div>-->
+  <div class="message2 left">This is another chat message</div>
+  <div class="message2 left">This is a really long chat message that just keeps going and going. Here we go, there is osme more text that just is just chillin down in here with a long length.</div>
+  <div class="message2 right">A right sided chat message</div>
+</div>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+<script src="js/drawer.js"></script>
+<script>
+$(function() {
+});
+</script>
+</body>
+</html>

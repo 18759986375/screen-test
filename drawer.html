@@ -1,0 +1,180 @@
+<html>
+<head>
+  <style type="text/css">
+  canvas { border: 1px solid #aaa; }
+  </style>
+</head>
+<body>
+<canvas id="c" width="600" height="400"></canvas>
+<br />
+<button class="mode" data-mode="pencil">Pencil</button>&nbsp;
+<button class="mode" data-mode="circle">Circle</button>&nbsp;
+<button class="mode" data-mode="rect">Rectangle</button>&nbsp;
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+<script>
+$(function() {
+
+  var Mode = {
+    pencil : 0,
+    circle : 1,
+    rect : 2
+  };
+
+  var canvas = $('#c')
+    , ctx = canvas.get(0).getContext('2d')
+    , painting = false
+    , clickX = []
+    , clickY = []
+    , clickDrag = []
+    , mode = Mode.pencil
+    , drawings = [];
+
+
+  $('.mode').on('click', function(e) {
+    var newMode = $(this).attr('data-mode');
+    mode = Mode[newMode];
+
+    clickX = [];
+    clickY = [];
+    clickDrag = [];
+  });
+
+  // Enable drawing on canvas
+  canvas.on('mousedown', function(e) {
+    var x = e.pageX - this.offsetLeft
+      , y = e.pageY - this.offsetTop;
+
+    painting = true;
+    addClick(x, y);
+  });
+
+  canvas.on('mousemove', function(e) {
+    if(painting) {
+
+      var x = e.pageX - this.offsetLeft
+        , y = e.pageY - this.offsetTop;
+
+      addClick(x, y, true);
+      redraw(x, y);
+    }
+  });
+
+  canvas.on('mouseup', function() {
+    painting = false;
+
+    //drawings.push([ clickX, clickY ]);
+
+    clickX = [];
+    clickY = [];
+    clickDrag = [];
+  });
+  canvas.on('mouseleave', function() {
+    painting = false;
+  });
+
+  function addClick(x, y, dragging) {
+    clickX.push(x);
+    clickY.push(y);
+    clickDrag.push(dragging);
+  }
+
+  function redraw(x, y) {
+    canvas.get(0).width = canvas.get(0).width;
+
+    switch(mode) {
+      case Mode.pencil:
+        drawPencil();
+        break;
+      case Mode.circle:
+        drawCircle(x, y);
+        break;
+      case Mode.rect:
+        drawRect();
+        break;
+    };
+  }
+
+  function drawPencil() {
+    ctx.strokeStyle = '#df4b26';
+    ctx.lineJoin = "round";
+    ctx.lineWidth = 2;
+        
+    for(var i = 0; i < clickX.length; i++) {   
+      ctx.beginPath();
+      if(clickDrag[i] && i) {
+        ctx.moveTo(clickX[i - 1], clickY[i - 1]);
+       }
+      else {
+         ctx.moveTo(clickX[i] - 1, clickY[i]);
+       }
+       ctx.lineTo(clickX[i], clickY[i]);
+       ctx.closePath();
+       ctx.stroke();
+    }
+  }
+
+  var startingX = null
+    , staringY = null;
+
+  function drawCircle(x, y) {
+    var largestX = clickX[0]
+      , largestY = clickY[0]
+      , minX = clickX[0]
+      , minY = clickY[0];
+
+    for(var i = 0; i < clickX.length; i++) {
+      if(clickX[i] > largestX) largestX = clickX[i];
+      if(clickY[i] > largestY) largestY = clickY[i];
+
+      if(clickX[i] < minX) minX = clickX[i];
+      if(clickY[i] < minY) minY = clickY[i];
+
+      /*ctx.beginPath();
+      ctx.arc(30, 30, 10, 0, 2 * Math.PI, false);
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = '#df4b26';
+      ctx.stroke();*/
+    }
+
+    /*var w = Math.abs(largestX - minX)
+      , h = Math.abs(largestY - minY);
+      , x = minX
+      , y = minY;*/
+
+    if(!startingX) {
+      startingX = x;
+      startingY = y;
+    }
+    var w = Math.abs(x - startingX)
+      , h = Math.abs(y - startingY);
+
+    var kappa = .5522848
+      , ox = (w / 2) * kappa
+      , oy = (h / 2) * kappa
+      , xe = x + w
+      , ye = y + h
+      , xm = x + w / 2
+      , ym = y + h / 2;
+
+    ctx.beginPath();
+    ctx.moveTo(x, ym);
+    ctx.bezierCurveTo(x, ym - oy, xm - ox, y, xm, y);
+    ctx.bezierCurveTo(xm + ox, y, xe, ym - oy, xe, ym);
+    ctx.bezierCurveTo(xe, ym + oy, xm + ox, ye, xm, ye);
+    ctx.bezierCurveTo(xm - ox, ye, x, ym + oy, x, ym);
+    ctx.closePath();
+
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = '#df4b26';
+    ctx.stroke();
+  }
+
+  function drawRect() {
+  }
+
+});
+
+</script>
+</body>
+</html>

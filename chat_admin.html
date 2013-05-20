@@ -1,0 +1,84 @@
+<html>
+<head>
+<style type="text/css">
+#chat-container {
+  border: 1px solid #aaa;
+  width: 300px;
+  padding: 5px;
+  background-color: #eee;
+}
+#chat-container #messages {
+  background-color: #fff;
+  padding: 5px;
+  border: 1px solid #aaa;
+  min-height: 20px;
+}
+#chat-container #message {
+  margin-top: 5px;
+  border: 1px solid #aaa;
+}
+#chat-container #message textarea {
+  border: 0;
+  padding: 0; margin: 0;
+  resize: vertical;
+  width: 100%;
+  outline: none;
+}
+</style>
+</head>
+<body>
+  <h2>Admin</h2>
+  <div id="chat-container">
+    <div id="messages"></div>
+    <div id="message">
+      <textarea rows="5"></textarea>
+    </div>
+  </div>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+<script src="http://localhost:8088/socket.io/socket.io.js"></script>
+<script>
+$(function() {
+
+  var $message = $('#message textarea');
+  var socket = io.connect('http://localhost:8088');
+  var appId = 1234;
+
+  socket.emit('register', { app : appId }, function(data) {
+    console.log(data);
+  });
+
+  $message.on('keydown', function(e) {
+    if(e.which === 13) {
+      var $t = $(this);
+      var message = $t.val();
+      $t.val('');
+
+      sendMessage(message);
+      addMessage(message);
+
+      return false;
+    }
+  });
+
+  function sendMessage(message) {
+    socket.emit('sendMessage', { app : appId, message : message });
+  }
+
+  function sendMessage(message) {
+    socket.emit('sendMessage', { app : appId, message : message });
+  }
+
+  var $messages = $('#messages');
+  function addMessage(message) {
+    var $message = $('<p />').text(message);
+    $messages.append($message);
+  }
+
+  socket.on('incomingMessage', function(data) {
+    addMessage(data.message);
+  });
+
+});
+</script>
+</body>
+</html>

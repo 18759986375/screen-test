@@ -1,0 +1,81 @@
+<html>
+<head>
+  <style type="text/css">
+  canvas { border: 1px solid #aaa; }
+  ul#colors { margin: 0; padding: 0; margin-top: 10px; }
+  ul#colors li {
+    list-style-type: none;
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border: 1px solid #ddd;
+    margin-right: 10px;
+  }
+  ul#size li { list-style-type: none; display: inline; margin-right: 10px; }
+  </style>
+</head>
+<body>
+<canvas id="c" width="600" height="400"></canvas>
+<br />
+<button class="mode" data-mode="pencil">Pencil</button>&nbsp;
+<button class="mode" data-mode="circle">Circle</button>&nbsp;
+<button class="mode" data-mode="rect">Rectangle</button>&nbsp;
+
+<ul id="colors"></ul>
+<br />
+<ul id="size"></ul>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+<script src="js/drawer.js"></script>
+<script>
+$(function() {
+
+  var colors = [
+    '#000000', '#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#00FFFF', 
+    '#FF00FF', '#C0C0C0', '#FFFFFF', 
+  ];
+
+  var $colors = $('ul#colors');
+  for(var i = 0; i < colors.length; i++) {
+    var $color = $('<li />')
+                  .attr('data-color', colors[i])
+                  .css('background-color', colors[i]);
+    $colors.append($color);
+  }
+
+  var $sizes = $('ul#size');
+  for(var i = 0; i < 5; i++) {
+    $sizes.append($('<li />').text(i + 1).attr('data-size', i + 1));
+  }
+
+  var c = $('canvas').get(0);
+  var d = new Drawer(c);
+
+  $('.mode').on('click', function(e) {
+    var mode = $(this).attr('data-mode');
+
+    d.setMode(mode);
+  });
+
+  $('li', $colors).on('click', function(e) {
+    var color = $(this).attr('data-color');
+    d.setColor(color);
+  });
+
+  $('li', $sizes).on('click', function(e) {
+    var size = parseInt($(this).attr('data-size'), 10);
+    d.setLineWidth(size * 2);
+  });
+
+  var img = new Image();
+  img.onload = function() {
+    c.getContext('2d').drawImage(img, 0, 0, 702, 302);
+  };
+  img.src = 'img/temp_screen.png';
+
+});
+</script>
+</body>
+</html>
+
+
